@@ -1,110 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Before / After Slider</title>
-	<style>
-		body {
-			background: #f0f0f0;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			height: 100vh;
-			margin: 0;
-		}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Before/After Image Slider</title>
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #FAFAFA;
+      margin: 0;
+    }
 
-		.container {
-			position: relative;
-			width: 600px;
-			max-width: 90%;
-			overflow: hidden;
-			border-radius: 10px;
-			box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-		}
+    #container {
+      position: relative;
+      display: flex;
+      width: clamp(20rem, 75vw, 50rem);
+      max-height: 95vh;
+      aspect-ratio: 3 / 2;
+    }
 
-		.container img {
-			width: 100%;
-			display: block;
-		}
+    .img-wrapper {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
 
-		.after {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 50%;
-			height: 100%;
-			overflow: hidden;
-		}
+    .img-wrapper:nth-child(2) {
+      clip-path: inset(0px 0px 0px 50%);
+    }
 
-		.after img {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-		}
+    .img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
-		.slider {
-			position: absolute;
-			top: 0;
-			left: 50%;
-			width: 4px;
-			height: 100%;
-			background: #fff;
-			border-left: 2px solid #000;
-			border-right: 2px solid #000;
-			cursor: ew-resize;
-			z-index: 2;
-			transition: background 0.2s;
-		}
+    #line {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: .2rem;
+      height: 100%;
+      background-color: #FAFAFA;
+    }
 
-		.slider:hover {
-			background: #ddd;
-		}
-	</style>
+    input {
+      /* reset */
+      appearance: none;
+      -webkit-appearance: none;
+      background-color: transparent;
+      /* custom */
+      position: absolute;
+      width: calc(100% + 2.25rem);
+      height: 100%;
+      left: -1.125rem;
+    }
+
+    input::-webkit-slider-thumb {
+      /* reset */
+      -webkit-appearance: none;
+      appearance: none;
+      /* custom */
+      height: 2.25rem;
+      width: 2.25rem;
+      border: .25rem solid #fff;
+      border-radius: 50%;
+      box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.1);
+      background-color: #fff;
+      background-image: url('data:image/svg+xml;utf8,%3Csvg xmlns%3D%22http%3A//www.w3.org/2000/svg%22 height%3D%2224px%22 viewBox%3D%220 -960 960 960%22 width%3D%2224px%22 fill%3D%22%23000%22%3E%3Cpath d%3D%22M286.15-293.85 100-479.62l185.77-185.76 42.15 41.76-113 113.62h530.16l-113-113.62 42.15-41.76L860-479.62 674.23-293.85l-42.54-41.77 113.39-114H214.54l113.38 114-41.77 41.77Z%22/%3E%3C/svg%3E');
+      background-size: cover;
+      cursor: grab;
+    }
+
+    input::-moz-range-thumb {
+      height: 2.25rem;
+      width: 2.25rem;
+      border: .25rem solid #fff;
+      border-radius: 50%;
+      box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.1);
+      background-color: #fff;
+      background-image: url('data:image/svg+xml;utf8,%3Csvg xmlns%3D%22http%3A//www.w3.org/2000/svg%22 height%3D%2224px%22 viewBox%3D%220 -960 960 960%22 width%3D%2224px%22 fill%3D%22%23000%22%3E%3Cpath d%3D%22M286.15-293.85 100-479.62l185.77-185.76 42.15 41.76-113 113.62h530.16l-113-113.62 42.15-41.76L860-479.62 674.23-293.85l-42.54-41.77 113.39-114H214.54l113.38 114-41.77 41.77Z%22/%3E%3C/svg%3E');
+      background-size: cover;
+      cursor: grab;
+    }
+
+    input:active::-webkit-slider-thumb {
+      cursor: grabbing;
+    }
+
+    input:active::-moz-slider-thumb {
+      cursor: grabbing;
+    }
+  </style>
 </head>
-
 <body>
-	<div class="container" id="sliderContainer">
-		<img src="before.png" alt="Before">
-		<div class="after">
-			<img src="after.png" alt="After">
+  <div id="container" aria-label="Before and after image slider">
+    <div class="img-wrapper">
+      <img src="https://raw.githubusercontent.com/ThomasEgMatthiesen/ThomasEgMatthiesen/refs/heads/main/hosted-assets/before.png" alt="Before">
     </div>
-			<div class="slider" id="slider"></div>
-		</div>
+    <div class="img-wrapper">
+      <img src="https://raw.githubusercontent.com/ThomasEgMatthiesen/ThomasEgMatthiesen/refs/heads/main/hosted-assets/after.png" alt="After">
+    </div>
+    <div id="line"></div>
+    <input id="slider" type="range" min="0" max="100" value="50">
+  </div>
 
-		<script>
-			const container = document.getElementById('sliderContainer');
-    const after = container.querySelector('.after');
+  <script>
+    const imgAfter = document.querySelector('.img-wrapper:nth-of-type(2)');
+    const line = document.getElementById('line');
     const slider = document.getElementById('slider');
 
-    let isDown = false;
-
-    const moveSlider = (x) => {
-      const rect = container.getBoundingClientRect();
-      let position = x - rect.left;
-      if (position < 0) position = 0;
-      if (position > rect.width) position = rect.width;
-      after.style.width = position + 'px';
-      slider.style.left = position + 'px';
-    };
-
-    slider.addEventListener('mousedown', () => (isDown = true));
-    window.addEventListener('mouseup', () => (isDown = false));
-    window.addEventListener('mousemove', (e) => {
-      if (!isDown) return;
-      moveSlider(e.clientX);
+    slider.addEventListener('input', () => {
+      line.style.left = `${slider.value}%`;   
+      imgAfter.style.clipPath = `inset(0px 0px 0px ${slider.value}%)`;
     });
 
-    // Touch support
-    slider.addEventListener('touchstart', () => (isDown = true));
-    window.addEventListener('touchend', () => (isDown = false));
-    window.addEventListener('touchmove', (e) => {
-      if (!isDown) return;
-      moveSlider(e.touches[0].clientX);
+    // Reset on double-click
+    slider.addEventListener('dblclick', () => {
+      slider.value = 50;
+      line.style.left = '50%';
+      imgAfter.style.clipPath = 'inset(0px 0px 0px 50%)';
     });
-		</script>
+  </script>
 </body>
-
 </html>
