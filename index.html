@@ -1,217 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Temp</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Test</title>
+
 <style>
-  body::-webkit-scrollbar {width: 10px; background-color: transparent; box-shadow: inset 1px 0px 0px 0px #00000029}
-  body::-webkit-scrollbar-thumb {border-radius: 0px; border: none; background-color: #bababa}
-  body::-webkit-scrollbar-thumb:hover {background-color: #afafaf}
-  body::-webkit-scrollbar-thumb:active {background-color: #9d9d9}
-  body {
-    margin: 0;
-    background-color: #222;
-    font-family: Arial, sans-serif;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  .page {flex: 1; display: flex; flex-direction: column; justify-content: space-between;}
-  header, footer {width: 100%; background-color: #333; color: #fff; text-align: center;}
-  footer {margin-top: auto; padding: 1rem 0;}
-
-  /* BEFORE/AFTER SLIDER */
-  .ba-slider {
-    position: relative;
-    display: flex;
-    width: 100%;
-    overflow: hidden;
-    cursor: pointer;
-    user-select: none;
-    margin: 0;
-    justify-content: center;
-    align-items: center;
-    background-color: #111;
-  }
-
-  .slider-group {overflow: hidden; height: 0;}
-  .slider-group .ba-slider:not(:last-child) {border-bottom: 2px solid #5f5f5f}
-
-  .img-wrapper {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .img-wrapper:nth-child(2) {clip-path: inset(0px 0px 0px 50%);}
-
-  .img-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-
-  .line {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 4px;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(8px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    z-index: 2;
-  }
-
-  .handle {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 2.25rem;
-    width: 2.25rem;
-    background-color: rgba(55,55,55,0.2);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.4);
-    border-radius: 50%;
-    box-shadow: inset 0 10px 20px rgba(255,255,255,0.6), 0 8px 20px rgba(0,0,0,0.4);
-    z-index: 3;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .handle::before,
-  .handle::after {
-    content: '';
-    display: block;
-    width: 8px;
-    height: 8px;
-    border-top: 4px solid rgba(255,255,255,0.5);
-    border-right: 4px solid rgba(255,255,255,0.5);
-    border-radius: 2px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-
-  .handle::before {transform: rotate(-135deg);}
-  .handle::after {transform: rotate(45deg);}
-
-  input {display: none;}
-
-details {
-    display: block;
-    margin: 1rem 1rem;
-    max-width: 100%; /* initial max-width */
-    background-color: RGB(50,50,50);
-    border: 2px solid #5f5f5f;
-    border-radius: 6px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
-    transform-origin: center;
-    color: #fff;
+:root {
+--BASpoilerPadding: 3px;
+--BASpoilerWidth: 100px;
+--BASpoilerHeight: 32px;
 }
 
-  #sliderSpoiler {
-    user-select: none;
-    cursor: pointer;
-    color: #fff;
-    font-weight: bold;
-    text-align: center;
-    padding: 8px 0px;
-    background-color: rgba(55,55,55,0.2);
-    backdrop-filter: blur(10px);
-    border-radius: 4px;
-    box-shadow: inset 0 10px 20px rgba(255,255,255,0.3),0 8px 20px rgba(0,0,0,0.4);
-    transition: all 0.1s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    white-space: nowrap;
-    width: 100%;
-    box-sizing: border-box;
-  }
+body {margin: 0; background-color: #222}
 
-  #sliderSpoiler:hover {
-    background-color: rgba(55,55,55,0.3);
-    box-shadow:inset 0 12px 22px rgba(255,255,255,0.4), 0 10px 25px rgba(0,0,0,0.4);
-  }
+/*---------------------------------------------------------------------- Spoiler stuff ----------------------------------------------------------------------*/
+.BASpoiler {
+  overflow: hidden;
+  margin: 1rem;
+  padding: var(--BASpoilerPadding);
+  height: var(--BASpoilerHeight);
+  max-height: fit-content;
+  background: tomato;
+  position: relative;
+  border-radius: 3px;
+}
 
-  #sliderSpoiler:active {
-    box-shadow:inset 0 10px 20px rgba(255,255,255,0.3);
-  }
+.BASpoilerToggle, .BASpoilerCollapse {
 
-  details[open] #sliderSpoiler {border-bottom-left-radius: 0; border-bottom-right-radius: 0}
-  #sliderSpoiler::-webkit-details-marker {display: none;}
-  #sliderSpoiler::marker {content: none;}
-  .slider-group {
-    transform-origin: top;
-    will-change: transform, opacity;
-    transition: none;
-  }
+  white-space: nowrap;
+  font-family: "Segoe UI";
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  position: relative;
+  width: 100%;
+  height: var(--BASpoilerHeight);
+  background: rgb(80, 80, 80);
+  border: 1px solid #666;
+  border-radius: 0.2rem;
+  transition: background-color 0.1s;
+  line-height: 1;
+}
 
-  .handle, .line {
-    will-change: transform;
-  }
+.BASpoilerToggle:hover, .BASpoilerCollapse:hover {background: rgb(100, 100, 100)}
+.BASpoilerToggle:active, .BASpoilerCollapse:active {background: rgb(40, 40, 40)}
+.BASpoilerToggle {
+  z-index: 1;
+}
+.BASpoilerCollapse {
+  margin-top: var(--BASpoilerPadding);
+}
+/*---------------------------------------------------------------------- Spoiler stuff ----------------------------------------------------------------------*/
+
+
+/*----------------------------------------------------------------------- Slider stuff ----------------------------------------------------------------------*/
+.BASlider {
+  user-select: none; cursor: pointer; overflow: hidden;
+  display: flex; justify-content: center; align-items: center;
+  position: relative; width: 100%; background-color: #111;
+}
+.img-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%
+}
+.img-wrapper:before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border: 2px solid RGBA(190,190,190, 0.5);
+  outline: 4px solid RGBA(90,90,90, 0.1);
+  outline-offset: -4px;
+}
+.img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.line {
+  position:absolute; left:50%;
+  transform:translateX(-50%);
+  width: 3px; height:100%;
+  background-color:rgba(255,255,255,0.2);
+  box-shadow:0 4px 15px rgba(0,0,0,0.5);
+  z-index:2;
+}
+.handle {
+  z-index:3; display:flex; justify-content:center; align-items:center;
+  position:absolute; top:50%; left: 50%;
+  transform:translate(-50%,-50%);
+  width: 2rem; height: 2rem;
+  backdrop-filter:blur(20px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius:50%;
+  box-shadow: inset 0 10px 20px rgba(255,255,255,0.6), 0 8px 20px rgba(0,0,0,0.2);
+}
+.handle::before, .handle::after {
+  content: '';
+  display:block; width:8px; height:8px;
+  border-top: 2px solid RGBA(255,255,255,0.5);
+  border-right: 2px solid RGBA(255,255,255,0.5);
+}
+.handle::before {transform: rotate(-135deg)}
+.handle::after {transform: rotate(45deg)}
+/*----------------------------------------------------------------------- Slider stuff ----------------------------------------------------------------------*/
+
+.BASliderWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  margin-top: var(--BASpoilerPadding);
+  background: transparent;
+}
+
+.BASliderWrapper[data-open="true"] {padding-top: var(--BASpoilerSpacing)} /* maybe reimplement this?*/
+.BASliderWrapper .BASlider {margin-bottom: var(--BASpoilerSpacing)} /* maybe reimplement this?*/
+
+
 </style>
 </head>
+
 <body>
 
-<div class="page">
-  <header><h1></h1></header>
-
-  <details>
-    <summary id="sliderSpoiler">Show more</summary>
-    <div class="slider-group">
-      <div class="ba-slider" data-before="https://picsum.photos/id/1015/800/600" data-after="https://picsum.photos/id/1016/800/600"></div>
-      <div class="ba-slider" data-before="https://picsum.photos/id/1020/800/600" data-after="https://picsum.photos/id/1021/800/600"></div>
-      <div class="ba-slider" data-before="https://picsum.photos/id/1025/800/600" data-after="https://picsum.photos/id/4/800/600"></div>
+<!-- BASpoiler 1 -->
+<div class="BASpoiler">
+  <button class="BASpoilerToggle">Show more</button>
+    <div class="BASliderWrapper" data-open="true">
+      <div class="BASlider" data-dimensions="800x600" data-before="https://picsum.photos/id/1015/800/600" data-after="https://picsum.photos/id/1016/800/600"></div>
+      <div class="BASlider" data-dimensions="800x600" data-before="https://picsum.photos/id/1020/800/600" data-after="https://picsum.photos/id/1021/800/600"></div>
+      <button class="BASpoilerCollapse" tabindex="-1">Collapse</button>
     </div>
-  </details>
-
-  <footer><p></p><p></p></footer>
 </div>
 
 <script>
-const sliderClickSpeed = 0.2, sliderDragSpeed = 0.5;
-const spoilerWidthSpeed = 0.2, spoilerHeightSpeed = 0.5;
+//---------------------------------------------------------------------- Spoiler stuff ----------------------------------------------------------------------//
+class BASpoilerAnimator {
+  constructor(element, steps) {
+    this.element = element;
+    this.steps = steps;
+    this.index = 0;
+    this.direction = 1;
+    this.progress = 0;
+    this.running = false;
+    this.startTime = null;
+    this.rafId = null;
+  }
 
-/* BEFORE/AFTER SLIDER */
+  getStepValues(step) {
+    if (step.property === "heightAuto") {
+      const natural = step.target.scrollHeight;   // measure natural height
+      return { start: step.start, end: natural };
+    }
+    return { start: step.start, end: step.end };
+  }
+
+  step(timestamp) {
+    let step = this.steps[this.index];
+
+    // replace heightAuto with dynamic numbers
+    let { start, end } = this.getStepValues(step);
+
+    if (this.startTime === null) this.startTime = timestamp;
+    const frameDelta = timestamp - this.startTime;
+    this.startTime = timestamp;
+
+    const delta = Math.min(frameDelta / step.duration, 1) * this.direction;
+    this.progress += delta;
+
+    this.progress = Math.min(1, Math.max(0, this.progress));
+    const eased = step.easing(this.progress);
+    const value = start + (end - start) * eased;
+
+    const cssProp = step.property === "heightAuto" ? "height" : step.property;
+    this.element.style[cssProp] = value + "px";
+
+    if ((this.progress === 1 && this.direction === 1) ||
+        (this.progress === 0 && this.direction === -1)) {
+      this.index += this.direction;
+      if (this.index < 0 || this.index >= this.steps.length) {
+        this.index = Math.max(0, Math.min(this.index, this.steps.length - 1));
+        this.running = false;
+        return;
+      }
+      this.progress = this.direction === 1 ? 0 : 1;
+      this.startTime = null;
+    }
+
+    this.rafId = requestAnimationFrame(this.step.bind(this));
+  }
+
+  playOrReverse() {
+    const atStart = this.index === 0 && this.progress === 0;
+    const atEnd   = this.index === this.steps.length - 1 && this.progress === 1;
+
+    this.direction = atStart ? 1 : atEnd ? -1 : -this.direction;
+
+    if (!this.running) this.play();
+  }
+
+  play() {
+    if (this.running) return;
+    if (this.rafId) cancelAnimationFrame(this.rafId);
+    this.running = true;
+    this.startTime = null;
+    this.rafId = requestAnimationFrame(this.step.bind(this));
+  }
+}
+//---------------------------------------------------------------------- Spoiler stuff ----------------------------------------------------------------------//
+
+
+//----------------------------------------------------------------------- Slider stuff ----------------------------------------------------------------------//
+const sliderClickSpeed = 0.2, sliderDragSpeed = 0.5;
+
 class BeforeAfterSlider {
   constructor(container) {
     this.container = container;
-    const beforeURL = container.dataset.before, afterURL = container.dataset.after;
+    const beforeURL = container.dataset.before;
+    const afterURL = container.dataset.after;
 
     this.container.innerHTML = `
-      <div class="img-wrapper"><img src="${beforeURL}" alt="Before"></div>
-      <div class="img-wrapper"><img src="${afterURL}" alt="After"></div>
-      <div class="line"></div><div class="handle"></div>
-    `;
+    <div class="img-wrapper"><img src="${beforeURL}" alt="Before"></div>
+    <div class="img-wrapper"><img src="${afterURL}" alt="After"></div>
+    <div class="line"></div><div class="handle"></div>`;
 
+    const dims = container.dataset.dimensions.split('x');
+    this.container.style.maxWidth = parseInt(dims[0]) + "px";
+    this.container.style.aspectRatio = `${parseInt(dims[0])} / ${parseInt(dims[1])}`;
     this.handle = container.querySelector('.handle');
     this.line = container.querySelector('.line');
     this.imgAfter = container.querySelector('.img-wrapper:nth-of-type(2)');
     this.imgBefore = container.querySelector('.img-wrapper:nth-of-type(1) img');
-    this.imgAfterImg = this.imgAfter.querySelector('img');
 
     this.targetValue = 50;
     this.currentValue = this.targetValue;
     this.isDragging = false;
     this.mouseDown = false;
-
-    // Wait until images are loaded to set aspect ratio
-    const setAspectRatio = () => {
-      const w = this.imgBefore.naturalWidth;
-      const h = this.imgBefore.naturalHeight;
-      if (w && h) this.container.style.aspectRatio = `${w} / ${h}`;
-    };
-    if (this.imgBefore.complete) setAspectRatio();
-    else this.imgBefore.onload = setAspectRatio;
+    this.animating = false;
 
     this.addEventListeners();
     this.updateVisuals();
@@ -219,6 +251,7 @@ class BeforeAfterSlider {
 
   addEventListeners() {
     let dragDelayTimeout;
+
     this.container.addEventListener('mousedown', (e) => {
       if (e.button !== 0) return;
       e.preventDefault();
@@ -229,143 +262,97 @@ class BeforeAfterSlider {
       this.mouseDown = true;
       clearTimeout(dragDelayTimeout);
       dragDelayTimeout = setTimeout(() => this.mouseDown && (this.isDragging = true), 150);
+      this.startAnimation();
     });
-    window.addEventListener('mouseup', () => {this.mouseDown = false; clearTimeout(dragDelayTimeout); this.isDragging = false});
+
+    window.addEventListener('mouseup', () => {
+      this.mouseDown = false; clearTimeout(dragDelayTimeout); this.isDragging = false;
+    });
+
     window.addEventListener('mousemove', (e) => {
       if (!this.mouseDown) return;
       const rect = this.container.getBoundingClientRect();
       let percent = ((e.clientX - rect.left) / rect.width) * 100;
       this.targetValue = Math.max(0, Math.min(100, percent));
+      this.startAnimation();
     });
+  }
+
+  startAnimation() {
+    if (!this.animating) {
+      this.animating = true;
+      requestAnimationFrame(() => this.updateVisuals());
+    }
   }
 
   updateVisuals() {
-      const speed = this.isDragging ? sliderDragSpeed : sliderClickSpeed;
-      this.currentValue += (this.targetValue - this.currentValue) * speed;
-      this.line.style.left = `${this.currentValue}%`;
-      this.handle.style.left = `${this.currentValue}%`;
-      this.imgAfter.style.clipPath = `inset(0px 0px 0px ${this.currentValue}%)`;
+    const speed = this.isDragging ? sliderDragSpeed : sliderClickSpeed;
+    this.currentValue += (this.targetValue - this.currentValue) * speed;
+    this.line.style.left = `${this.currentValue}%`;
+    this.handle.style.left = `${this.currentValue}%`;
+    this.imgAfter.style.clipPath = `inset(0px 0px 0px ${this.currentValue}%)`;
+
+    if (Math.abs(this.currentValue - this.targetValue) > 0.1) {
       requestAnimationFrame(() => this.updateVisuals());
+    } else {
+      this.currentValue = this.targetValue; this.animating = false;
+    }
   }
 }
-
-document.querySelectorAll('.ba-slider').forEach(slider => new BeforeAfterSlider(slider));
-
+//----------------------------------------------------------------------- Slider stuff ----------------------------------------------------------------------//
 
 
+//----------------------------------------------------------------------- Setup stuff -----------------------------------------------------------------------//
+
+// Spoiler
+document.querySelectorAll(".BASpoiler").forEach(spoiler => {
+  const Toggle = spoiler.querySelector(".BASpoilerToggle");
+  const Collapse = spoiler.querySelector(".BASpoilerCollapse");
+  const wrapper = spoiler.querySelector(".BASliderWrapper");
+
+
+  const BaseSpoilerWidth = parseInt(getComputedStyle(spoiler).getPropertyValue('--BASpoilerWidth'));
+  const BaseSpoilerHeight = parseInt(getComputedStyle(spoiler).getPropertyValue('--BASpoilerHeight'));
+  const SpoilerPadding = parseInt(getComputedStyle(spoiler).getPropertyValue('--BASpoilerPadding'));
+
+
+
+
+  const sliders = Array.from(wrapper.querySelectorAll(".BASlider"));
+  sliders.forEach(slider=>new BeforeAfterSlider(slider));
+  const maxWidth  = Math.max(...sliders.map(s => Number(s.dataset.dimensions.split('x')[0])));
+
+  const totalHeight = sliders.map(s => Number(s.dataset.dimensions.split('x')[1])).reduce((a, b) => a + b, 0) + (BaseSpoilerHeight*2) + (SpoilerPadding*2);
 
 
 
 
 
-document.querySelectorAll('details').forEach(detail => {
-  const content = detail.querySelector('.slider-group');
-  const sliderSpoiler = detail.querySelector('#sliderSpoiler');
-  if (!content || !sliderSpoiler) return;
+  spoiler.style.maxWidth = BaseSpoilerWidth+"px";
+  wrapper.maxSliderWidth = maxWidth;
 
-  let animating = false;
-  const easeInOutCubic = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  const animate = (duration, draw) => new Promise(resolve => {
-    const start = performance.now();
-    const step = time => {
-      const progress = Math.min((time - start) / duration, 1);
-      draw(easeInOutCubic(progress));
-      if (progress < 1) requestAnimationFrame(step);
-      else resolve();
-    };
-    requestAnimationFrame(step);
-  });
 
-  const getMaxImageWidth = () => {
-    const images = detail.querySelectorAll('.ba-slider img');
-    let maxWidth = 0;
-    images.forEach(img => {
-      if (img.naturalWidth > maxWidth) maxWidth = img.naturalWidth;
-    });
-    return maxWidth;
-  };
 
-  const updateOpenStyles = () => {
-    if (!detail.open) return;
-    const vw = window.innerWidth;
-    const maxImageWidth = getMaxImageWidth();
-    const width = Math.min(0.9 * vw, maxImageWidth);
-    detail.style.width = width + 'px';
-  };
 
-  // Clone the sliderSpoiler to create a bottom collapse button
-  let bottomCollapse = sliderSpoiler.cloneNode(true);
-  bottomCollapse.textContent = 'Collapse';
-  bottomCollapse.style.borderRadius = '0px';
-  bottomCollapse.addEventListener('click', e => {
-    e.preventDefault();
-    if (!animating) sliderSpoiler.click(); // trigger collapse
-  });
 
-  // Initialize states
-  if (detail.open) {
-    updateOpenStyles();
-    sliderSpoiler.textContent = 'Collapse';
-    content.style.height = content.scrollHeight + 'px';
-    detail.style.borderBottomLeftRadius = '0px';
-    detail.style.borderBottomRightRadius = '0px';
-    if (!content.contains(bottomCollapse)) content.appendChild(bottomCollapse);
-  } else {
-    sliderSpoiler.textContent = 'Show more';
-    detail.style.width = '120px';
-    content.style.height = '0px';
-    detail.style.borderBottomLeftRadius = '8px';
-    detail.style.borderBottomRightRadius = '8px';
-    if (content.contains(bottomCollapse)) content.removeChild(bottomCollapse);
-  }
 
-  sliderSpoiler.addEventListener('click', async e => {
-    e.preventDefault();
-    if (animating) return;
-    animating = true;
-
-    const startWidth = detail.offsetWidth;
-    const startMargin = parseFloat(getComputedStyle(detail).marginLeft);
-    const vw = window.innerWidth;
-    const maxImageWidth = getMaxImageWidth();
-    const targetWidth = Math.min(0.9 * vw, maxImageWidth);
-    const targetMargin = 0.05 * vw;
-
-    if (detail.open) {
-      const startHeight = content.scrollHeight;
-      await animate(spoilerHeightSpeed * 1000, t => content.style.height = (startHeight * (1 - t)) + 'px');
-      await animate(spoilerWidthSpeed * 1000, t => {
-        detail.style.width = startWidth + (120 - startWidth) * t + 'px';
-        detail.style.marginLeft = startMargin + (16 - startMargin) * t + 'px';
-        detail.style.marginRight = startMargin + (16 - startMargin) * t + 'px';
-        detail.style.borderBottomLeftRadius = `${8 * t}px`;
-        detail.style.borderBottomRightRadius = `${8 * t}px`;
-      });
-      detail.open = false;
-      sliderSpoiler.textContent = 'Show more';
-      if (content.contains(bottomCollapse)) content.removeChild(bottomCollapse);
-    } else {
-      detail.open = true;
-      sliderSpoiler.textContent = 'Collapse';
-      await animate(spoilerWidthSpeed * 1000, t => {
-        detail.style.width = startWidth + (targetWidth - startWidth) * t + 'px';
-        detail.style.marginRight = startMargin + (targetMargin - startMargin) * t + 'px';
-        detail.style.borderBottomLeftRadius = `${8 * (1 - t)}px`;
-        detail.style.borderBottomRightRadius = `${8 * (1 - t)}px`;
-      });
-      const targetHeight = content.scrollHeight;
-      content.style.height = '0px';
-      await animate(spoilerHeightSpeed * 1000, t => content.style.height = (targetHeight * t) + 'px');
-      content.style.height = 'auto';
-      if (!content.contains(bottomCollapse)) content.appendChild(bottomCollapse);
-    }
-
-    animating = false;
-  });
-
-  window.addEventListener('resize', updateOpenStyles);
+  const Easings = {easeInOutQuad: t=>t<0.5?2*t*t:-1+(4-2*t)*t, easeInOutCubic: t=>t<0.5?4*t*t*t:(t-1)*(2*t-2)*(2*t-2)+1};
+  const SpoilerAnimation = new BASpoilerAnimator(spoiler, [
+    {property: "maxWidth", start: BaseSpoilerWidth, end: wrapper.maxSliderWidth, duration: 250, easing: Easings.easeInOutQuad},
+    {property:   "height", start: BaseSpoilerHeight, end: totalHeight, duration: 400, easing: Easings.easeInOutCubic}
+  ]);
+  Toggle.addEventListener("click", () => SpoilerAnimation.playOrReverse());
+  Collapse.addEventListener("click", () => { SpoilerAnimation.direction = -1; SpoilerAnimation.play()});
 });
 
+
+window.addEventListener('resize', () => {
+  const sliders = spoiler.querySelectorAll('.BASlider');
+  const totalHeight = Array.from(sliders)
+    .map(s => Number(s.dataset.dimensions.split('x')[1]))
+    .reduce((a,b) => a+b, 0) + (BaseSpoilerHeight*2) + (SpoilerPadding*2);
+  spoiler.style.height = totalHeight + 'px';
+});
 </script>
 
 </body>
